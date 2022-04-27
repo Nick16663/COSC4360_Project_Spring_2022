@@ -136,9 +136,6 @@ public class Map {
 		PostOffice Denver = new PostOffice("Denver", "CO", true);
 		PostOffice Hartford = new PostOffice("Hartford", "CT", true);
 		PostOffice Wilmington = new PostOffice("Wilmington", "DE", true);
-		
-		//maybe DC
-		
 		PostOffice Orlando = new PostOffice("Orlando", "FL", true);
 		PostOffice Atlanta = new PostOffice("Atlanta", "GA", true);
 		PostOffice Honolulu = new PostOffice("Honolulu", "HI", true);
