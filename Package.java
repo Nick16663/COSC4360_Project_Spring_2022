@@ -26,6 +26,122 @@ public class Package {
 		
 	}
 	
+	Package(String Rname, String Raddress, String Rcity, String Rstate, int Rzip,
+			String Sname, String Saddress, String Scity, String Sstate, int Szip){
+		
+		this.RcvrName = Rname;
+		this.RcvrAddress = Raddress;
+		this.RcvrCity = Rcity;
+		this.RcvrState = Rstate;
+		this.RcvrZip = Rzip;
+		this.SndrName = Sname;
+		this.SndrAddress = Saddress;
+		this.SndrCity = Scity;
+		this.SndrState = Sstate;
+		this.SndrZip = Szip;
+		
+	}
+	
+	public String getRcvrName() {
+		
+		return RcvrName;
+	}
+	
+	public void setRcvrName(String name) {
+		
+		this.RcvrName = name;
+	}
+	
+	public String getRcvrAddress() {
+		
+		return RcvrAddress;
+	}
+	
+	public void setRcvrAddress(String address) {
+		
+		this.RcvrAddress = address;
+	}
+	
+	public String getRcvrCity() {
+		
+		return RcvrCity;
+	}
+	
+	public void setRcvrCity(String city) {
+		
+		this.RcvrCity = city;
+	}
+	
+	public String getRcvrState() {
+		
+		return RcvrState;
+	}
+	
+	public void setRcvrState(String state) {
+		
+		this.RcvrState = state;
+	}
+	
+	public int getRcvrZip() {
+		
+		return RcvrZip;
+	}
+	
+	public void setRcvrZip(int zip) {
+		
+		this.RcvrZip = zip;
+	}
+	
+	public String getSndrName() {
+		
+		return SndrName;
+	}
+	
+	public void setSndrName(String name) {
+		
+		this.SndrName = name;
+	}
+	
+	public String getSndrAddress() {
+		
+		return SndrAddress;
+	}
+	
+	public void setSndrAddress(String address) {
+		
+		this.SndrAddress = address;
+	}
+	
+	public String getSndrCity() {
+		
+		return SndrCity;
+	}
+	
+	public void setSndrCity(String city) {
+		
+		this.SndrCity = city;
+	}
+	
+	public String getSndrState() {
+		
+		return SndrState;
+	}
+	
+	public void setSndrState(String state) {
+		
+		this.SndrState = state;
+	}
+	
+	public int getSndrZip() {
+		
+		return SndrZip;
+	}
+	
+	public void setSndrZip(int zip) {
+		
+		this.SndrZip = zip;
+	}
+	
 	private PackageState currentState = new SortingState();
 
 
