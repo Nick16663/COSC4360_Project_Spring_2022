@@ -165,7 +165,7 @@ public class Map {
 		PostOffice Columbus = new PostOffice("Columbus", "OH", true);
 		PostOffice OklahomaCity = new PostOffice("Oklahoma City", "OK", true);
 		PostOffice Portland = new PostOffice("Portland", "OR", true);
-		PostOffice Pittsburgh = new PostOffice("PittsBurgh", "PA", true);
+		PostOffice Pittsburgh = new PostOffice("Pittsburgh", "PA", true);
 		PostOffice Providence = new PostOffice("Providence", "RI", true);
 		PostOffice Charleston = new PostOffice("Charleston", "SC", true);
 		PostOffice SiouxFalls = new PostOffice("Sioux Falls", "SD", true);
