@@ -18,7 +18,7 @@ Louisville KY true
 New_Orleans LA true
 Bangor ME true
 Baltimore MD true
-Boston MA ture
+Boston MA true
 Detroit MI true
 Minneapolis MN true
 Jackson MS true
