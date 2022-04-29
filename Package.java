@@ -157,12 +157,11 @@ public class Package {
 
 	}
 
-	public void getState(PackageState state) {
+	public void getState() {
 
-	state.showState();
+	this.currentState.showState();
 
 	}
-
 
 
 	public interface PackageState {
