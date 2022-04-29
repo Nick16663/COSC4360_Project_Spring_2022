@@ -42,6 +42,12 @@ public class Package {
 		
 	}
 	
+	public void getRcvrInfo() {
+		
+		System.out.println(RcvrName + "\n" + RcvrAddress + "\n " + RcvrCity + ", " + RcvrState +
+				" " + RcvrZip);
+	}
+	
 	public String getRcvrName() {
 		
 		return RcvrName;
