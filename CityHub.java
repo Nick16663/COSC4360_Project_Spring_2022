@@ -148,6 +148,21 @@ public class CityHub {
 			return false;
 	}
 	
+	public boolean removeNeighbors(CityHub city) {
+		if(neighbors.contains(city)) {
+			neighbors.remove(city);
+			return true;
+		}else
+			return false;
+	}
+	
+	public boolean removeNeighbors(int i) {
+		if(neighbors.size() > i) {
+			neighbors.remove(i);
+			return true;
+		}else
+			return false;
+	}
 	
 	//Weird method, may or may not use; attempts to add neighboring cities via name (string), state (string), and hub status (boolean)
 	
