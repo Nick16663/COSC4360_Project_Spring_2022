@@ -190,6 +190,14 @@ public class Map {
 			available = status;
 		}
 		
+		public void setCityName(String cityName){
+			this.cityName = cityName;
+		}
+		
+		public void setState(String state){
+			this.state = state;
+		}
+		
 		public String getCityName() {
 			return cityName;
 		}
