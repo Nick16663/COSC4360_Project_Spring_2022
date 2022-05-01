@@ -5,7 +5,7 @@ public class Customer {
     private String state;
     private String city;
 
-    public Route(String streetName, String zipCode, String state, String city, String customerName) {
+    public Customer(String streetName, String zipCode, String state, String city, String customerName) {
         this.streetName = streetName;
         this.zipCode = zipCode;
         this.state = state;
