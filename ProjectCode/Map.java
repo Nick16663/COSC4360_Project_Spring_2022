@@ -98,8 +98,16 @@ public class Map {
 		return roadList;
 	}
 	
+	public PostOffice getPostOffice(String name) {
+		for(int i = 0; i < officeList.size(); i++) {
+			if(name.equals(officeList.get(i).getCityName())) {
+				return officeList.get(i);
+			}
+		}
+		return new PostOffice(name); //Return PO with given name and default attributes if not found in database
+	}
 	
-	
+	//PostOffice class begins ===========================================================================
 	static class PostOffice{
 		private String cityName;
 		private String state;
@@ -111,7 +119,19 @@ public class Map {
 		
 		PostOffice(){
 			
-			this.cityName = "DEFAULT";
+			this.cityName = "DEFAULT_CITY";
+			this.state = "DEFAULT_STATE";
+			this.hub = false;
+			
+			packagesSent = 0;
+			packagesReceived = 0;
+			available = true;
+			
+		}
+		
+		PostOffice(String cityName){
+			
+			this.cityName = cityName;
 			this.state = "DEFAULT_STATE";
 			this.hub = false;
 			
@@ -199,6 +219,23 @@ public class Map {
 			return tempList;
 		}
 		
+		public ArrayList<PostOffice> getObjNeighbors() {
+			
+			ArrayList<PostOffice> tempList = new ArrayList<PostOffice>();
+			
+			for(int i = 0; i < roadList.size(); i++) {
+				if(cityName.equals(roadList.get(i).source.getCityName())) {
+					for(int j = 0; j < officeList.size(); j++) {
+						if(roadList.get(i).destination.getCityName().equals(officeList.get(j).getCityName())) {
+							tempList.add(officeList.get(j));
+						}
+					}
+				}
+			}
+			
+			return tempList;
+		}
+		
 		public boolean isAvailable() {
 			return available;
 		}
@@ -210,8 +247,13 @@ public class Map {
 		public String toString() {
 			return "City: "+cityName+", State: "+state+", Packages Sent: "+packagesSent+", Packages Received: "+packagesReceived+", isAvailable: "+available+", isHub: "+hub;
 		}
-	}
+		
+		
+	}//End of PostOffice class  ===========================================================================
 	
+	
+	
+	// Edge class begins ===========================================================================
 	static class Edge {
 		PostOffice source;
 		PostOffice destination;
@@ -230,7 +272,7 @@ public class Map {
 		public String toString() {
 			return weight+" mile route from "+source.getCityName()+" to "+destination.getCityName();
 		}
-	}
+	}// End of Edge class  ===========================================================================
 
 	// Commented out for testing purposes
 	/*
@@ -371,3 +413,4 @@ public class Map {
 	
 	*/
 }
+
