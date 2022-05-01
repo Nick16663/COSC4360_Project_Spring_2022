@@ -13,19 +13,19 @@ public class Customer {
         this.customerName = customerName;
     }
 
-    private String getStreetName() {
+    public String getStreetName() {
         return streetName;
     }
 
-    private String getZipCode() {
+    public String getZipCode() {
         return zipCode;
     }
 
-    private String getState() {
+    public String getState() {
         return state;
     }
 
-    private String getCity() {
+    public String getCity() {
         return city;
     }
 
