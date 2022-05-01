@@ -1,7 +1,104 @@
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Map {
+	
+	private static Map instance;
+	
+	public static ArrayList<PostOffice> officeList = new ArrayList<PostOffice>(); //gets? sets?
+	public static ArrayList<Edge> roadList = new ArrayList<Edge>();
+	
+	final String POSTOFFICE_PATH = "src\\postoffices.txt";
+	final String ROADS_PATH = "src\\roads.txt";
+	
+	private Map() {
+		
+		Scanner input;
+		Scanner input2;
+		
+		try {
+			
+			input = new Scanner(new File(POSTOFFICE_PATH));
+			input2 = new Scanner(new File(ROADS_PATH));
+			
+			String city;
+			String state;
+			String isHub;
+			boolean bool;
+			
+			String city1;
+			String city2;
+			PostOffice cityObj1 = new PostOffice();
+			PostOffice cityObj2 = new PostOffice();
+			int weight;
+			
+			while(input.hasNextLine()) {
+				
+				city = input.next();
+				state = input.next();
+				isHub = input.next();
+				bool = false;
+				
+				if(isHub.toLowerCase().equals("true")) {
+					bool = true;
+				}else{
+					bool = false;
+				}
+				
+				officeList.add(new PostOffice(city, state, bool)); 
+				
+			}
+			
+			input.close();
+			
+			while(input2.hasNextLine()) {
+				
+				city1 = input2.next();
+				city2 = input2.next();
+				weight = input2.nextInt();
+				
+				
+				
+				for(int i = 0; i < officeList.size(); i++) {
+					if(city1.equals(officeList.get(i).getCityName())) {
+						cityObj1 = officeList.get(i);
+					}
+					
+					if(city2.equals(officeList.get(i).getCityName())) {
+						cityObj2 = officeList.get(i);
+					}
+				}
+				
+				
+				
+				roadList.add(new Edge(cityObj1, cityObj2, weight));
+				roadList.add(new Edge(cityObj2, cityObj1, weight));
+				
+			}
+			
+			input2.close();
+		
+		} 
+		catch (FileNotFoundException e) {
+			System.out.print("File not found!");
+		}
+	}
+	
+	static {
+		instance = new Map();
+	}
+	
+	public static Map getInstance() {
+		return instance;
+	}
+	
+	public ArrayList<Edge> getRoadList(){
+		return roadList;
+	}
+	
+	
 	
 	static class PostOffice{
 		private String cityName;
@@ -10,7 +107,19 @@ public class Map {
 		private int packagesReceived;
 		private boolean available;
 		private boolean hub;
-		private LinkedHashMap<PostOffice, Double> neighbors = new LinkedHashMap<PostOffice, Double>();
+		//private ArrayList<Edge> neighborPaths = new ArrayList<Edge>();
+		
+		PostOffice(){
+			
+			this.cityName = "DEFAULT";
+			this.state = "DEFAULT_STATE";
+			this.hub = false;
+			
+			packagesSent = 0;
+			packagesReceived = 0;
+			available = true;
+			
+		}
 		
 		PostOffice(String cityName, String state, boolean hub){
 			
@@ -21,7 +130,7 @@ public class Map {
 			packagesSent = 0;
 			packagesReceived = 0;
 			available = true;
-	
+			
 		}
 		
 		public void setPackagesSent(int num) {
@@ -39,11 +148,11 @@ public class Map {
 		public void addPackagesReceived(int num) {
 			packagesReceived += num;
 		}
-		
+		/*
 		public void addNeighbor(PostOffice neighbor, double distance) {
 			neighbors.put(neighbor, distance);
 		}
-		
+		*/
 		public void setAvailability(boolean status) {
 			available = status;
 		}
@@ -64,8 +173,30 @@ public class Map {
 			return packagesReceived;
 		}
 		
-		public void getNeighbors() {
-			System.out.println(neighbors);
+		public ArrayList<Edge> getNeighborList() {
+			
+			ArrayList<Edge> tempList = new ArrayList<Edge>();
+			
+			for(int i = 0; i < roadList.size(); i++) {
+				if(cityName.equals(roadList.get(i).source.getCityName())) {
+					tempList.add(roadList.get(i));
+				}
+			}
+			
+			return tempList;
+		}
+		
+		public ArrayList<String> getNeighbors() {
+			
+			ArrayList<String> tempList = new ArrayList<String>();
+			
+			for(int i = 0; i < roadList.size(); i++) {
+				if(cityName.equals(roadList.get(i).source.getCityName())) {
+					tempList.add(roadList.get(i).destination.getCityName());
+				}
+			}
+			
+			return tempList;
 		}
 		
 		public boolean isAvailable() {
@@ -81,24 +212,33 @@ public class Map {
 		}
 	}
 	
-	
-	
 	static class Edge {
-		int source;
-		int destination;
+		PostOffice source;
+		PostOffice destination;
 		int weight;
 
-		public Edge(int source, int destination, int weight) {
+		public Edge(PostOffice source, PostOffice destination, int weight) {
 			this.source = source;
 			this.destination = destination;
 			this.weight = weight;
 		}
+		
+		public double getEdgeTime() {
+			return (double)weight / 65;
+		}
+		
+		public String toString() {
+			return weight+" mile route from "+source.getCityName()+" to "+destination.getCityName();
+		}
 	}
 
+	// Commented out for testing purposes
+	/*
 	static class Graph {
 		int vertices;
 		LinkedList<Edge> [] adjacencylist;
 
+		@SuppressWarnings("unchecked")
 		Graph(int vertices) {
 			this.vertices = vertices;
 			adjacencylist = new LinkedList[vertices];
@@ -122,9 +262,16 @@ public class Map {
 				}
 			}
 		}
-	}
-	public static void main(String[] args) {
 		
+	}
+	*/
+	
+	
+	
+	
+	/*
+	
+	public static void main(String[] args) {
 		
 		//State Hubs (should be 50)
 		
@@ -185,12 +332,6 @@ public class Map {
 		PostOffice SanAntonio = new PostOffice("San Antonio", "TX", false);
 		
 		
-		
-		
-		
-		
-		
-		
 		//NOTE may just want to make the hubs the only post offices that are neighbors with other state post offices to reduce edges
 		//and sub postoffices may only have one neighbor being the hub
 		//example Austin goes to Dallas before going to Houston rather than Austin to Houston
@@ -215,16 +356,18 @@ public class Map {
 		
 		int vertices = 6;
 		Graph graph = new Graph(vertices);
-		/*
-		graph.addEdge(0, 1, 4);
-		graph.addEdge(0, 2, 3);
-		graph.addEdge(1, 3, 2);
-		graph.addEdge(1, 2, 5);
-		graph.addEdge(2, 3, 7);
-		graph.addEdge(3, 4, 2);
-		graph.addEdge(4, 0, 4);
-		graph.addEdge(4, 1, 4);
-		graph.addEdge(4, 5, 6);
-		graph.printGraph();*/
+		
+		//graph.addEdge(0, 1, 4);
+		//graph.addEdge(0, 2, 3);
+		//graph.addEdge(1, 3, 2);
+		//graph.addEdge(1, 2, 5);
+		//graph.addEdge(2, 3, 7);
+		//graph.addEdge(3, 4, 2);
+		//graph.addEdge(4, 0, 4);
+		//graph.addEdge(4, 1, 4);
+		//graph.addEdge(4, 5, 6);
+		//graph.printGraph();
 	}
+	
+	*/
 }
