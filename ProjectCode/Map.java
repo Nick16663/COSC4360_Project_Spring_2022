@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+//Map Class begins ===========================================================================
 public class Map {
 	
 	private static Map instance;
@@ -13,6 +14,7 @@ public class Map {
 	final String POSTOFFICE_PATH = "src\\postoffices.txt";
 	final String ROADS_PATH = "src\\roads.txt";
 	
+	//Map constructor begins ===========================================================================
 	private Map() {
 		
 		Scanner input;
@@ -84,7 +86,7 @@ public class Map {
 		catch (FileNotFoundException e) {
 			System.out.print("File not found!");
 		}
-	}
+	}//Map constructor ends ===========================================================================
 	
 	static {
 		instance = new Map();
@@ -98,7 +100,8 @@ public class Map {
 		return roadList;
 	}
 	
-	public PostOffice getPostOffice(String name) {
+		
+	public PostOffice getPostOffice(String name) { //Quick way to retrieve a Post Office from the ArrayList via City Name
 		for(int i = 0; i < officeList.size(); i++) {
 			if(name.equals(officeList.get(i).getCityName())) {
 				return officeList.get(i);
@@ -106,6 +109,16 @@ public class Map {
 		}
 		return new PostOffice(name); //Return PO with given name and default attributes if not found in database
 	}
+	
+	public PostOffice getStatePostOffice(String state) {  //Quick way to retrieve a Post Office from the ArrayList via State Name (ONLY ABBREVIATIONS, i.e. TX, NE, LA, etc.)
+		for(int i = 0; i < officeList.size(); i++) {
+			if(state.equals(officeList.get(i).getState())) {
+				return officeList.get(i);
+			}
+		}
+		return new PostOffice(); //Return default PO if state not found in database
+	}
+	
 	
 	//PostOffice class begins ===========================================================================
 	static class PostOffice{
@@ -274,7 +287,7 @@ public class Map {
 		}
 	}// End of Edge class  ===========================================================================
 
-	// Commented out for testing purposes
+// Commented out for testing purposes ======================================================================
 	/*
 	static class Graph {
 		int vertices;
@@ -412,5 +425,5 @@ public class Map {
 	}
 	
 	*/
-}
+} //Map Class ends ===========================================================================
 
