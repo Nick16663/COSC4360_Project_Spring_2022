@@ -1,44 +1,89 @@
-
 public class Package {
 	
 	final int DayCreated = TimeKeeper.getCurrentDay(); //without testing, I'm assuming this works on initialization
 	private int DaysInTransit = (TimeKeeper.getCurrentDay() - DayCreated);
+	
+	//Receiver Information
 	private String RcvrName;
 	private String RcvrAddress;
 	private String RcvrCity;
 	private String RcvrState;
 	private int RcvrZip;
+	
+	//Sender Information
 	private String SndrName;
 	private String SndrAddress;
 	private String SndrCity;
 	private String SndrState;
 	private int SndrZip;
 	
+	//Map Information
+	private Map.PostOffice currentLocOffice;
+	private String currentLocName;
 	
-	Package(String Rname, String Raddress, String Rcity, String Rstate, int Rzip){
+	//Has package arrived?
+	private boolean hasArrived;
+	
+	Package(){ //Default constructor, probably don't use in actual execution
 		
-		this.RcvrName = Rname;
-		this.RcvrAddress = Raddress;
-		this.RcvrCity = Rcity;
-		this.RcvrState = Rstate;
-		this.RcvrZip = Rzip;
+		this.RcvrName = "DEFAULT_NAME";
+		this.RcvrAddress = "DEFAULT_ADDR";
+		this.RcvrCity = "DEFAULT_CITY";
+		this.RcvrState = "DEFAULT_STATE";
+		this.RcvrZip = 99999;
 		
+		this.SndrName = "DEFAULT_NAME";
+		this.SndrAddress = "DEFAULT_ADDR";
+		this.SndrCity = "DEFAULT_CITY";
+		this.SndrState = "DEFAULT_STATE";
+		this.SndrZip = 00000;
+		
+		currentLocOffice = new Map.PostOffice();
+		currentLocName = "DEFAULT_CITY";
+		
+		hasArrived = false;
 		
 	}
 	
-	Package(String Rname, String Raddress, String Rcity, String Rstate, int Rzip,
-			String Sname, String Saddress, String Scity, String Sstate, int Szip){
+	Package(String Rname, String Raddress, String Rcity, String Rstate, int Rzip, Map.PostOffice currLoc, String currLocName){ //Receiver constructor
 		
 		this.RcvrName = Rname;
 		this.RcvrAddress = Raddress;
 		this.RcvrCity = Rcity;
 		this.RcvrState = Rstate;
 		this.RcvrZip = Rzip;
+		
+		this.SndrName = "DEFAULT_NAME";
+		this.SndrAddress = "DEFAULT_ADDR";
+		this.SndrCity = "DEFAULT_CITY";
+		this.SndrState = "DEFAULT_STATE";
+		this.SndrZip = 00000;
+		
+		currentLocOffice = currLoc;
+		currentLocName = currLocName;
+		
+		hasArrived = false;
+		
+	}
+	
+	Package(String Rname, String Raddress, String Rcity, String Rstate, int Rzip, String Sname, String Saddress, String Scity, String Sstate, int Szip, Map.PostOffice currLoc, String currLocName){ //Full constructor
+		
+		this.RcvrName = Rname;
+		this.RcvrAddress = Raddress;
+		this.RcvrCity = Rcity;
+		this.RcvrState = Rstate;
+		this.RcvrZip = Rzip;
+		
 		this.SndrName = Sname;
 		this.SndrAddress = Saddress;
 		this.SndrCity = Scity;
 		this.SndrState = Sstate;
 		this.SndrZip = Szip;
+		
+		currentLocOffice = currLoc;
+		currentLocName = currLocName;
+		
+		hasArrived = false;
 		
 	}
 	
@@ -148,6 +193,62 @@ public class Package {
 		this.SndrZip = zip;
 	}
 	
+	public Map.PostOffice getCurrLocOffice(){
+		return currentLocOffice;
+	}
+	
+	public void setCurrLocOffice(Map.PostOffice x){
+		currentLocOffice = x;
+	}
+	
+	public String getCurrentLocName() {
+		return currentLocName;
+	}
+	
+	public void setCurrentLocName(String name) {
+		currentLocName = name;
+	}
+	
+	public boolean hasArrived() {
+		return hasArrived;
+	}
+	
+	public void setArrival(boolean bool) {
+		hasArrived = bool;
+	}
+	
+	public int getDaysInTransit() {
+		return DaysInTransit;
+	}
+	
+	public void setDaysInTransit(int transitDays) {
+		DaysInTransit = transitDays;
+	}
+	
+	
+	public boolean goTo(Map.PostOffice x) {
+		if(this.currentLocOffice.getObjNeighbors().contains(x)) {
+			
+			System.out.println("Travelling from "+currentLocOffice.getCityName()+" to "+x.getCityName());
+			
+			this.setCurrLocOffice(x);
+			return true;
+		}else {
+			
+			System.out.println("ERR: "+x.getCityName()+" is not a neighbor of "+currentLocOffice.getCityName());
+			
+			return false;
+		}
+	}
+	
+	public String toString() {
+		return "To "+RcvrName+" currently at "+currentLocOffice.getCityName();
+	}
+	
+	
+// Commented out for testing purposes ==========================================================
+	
+	/*
 	private PackageState currentState = new SortingState();
 
 
@@ -174,7 +275,7 @@ public class Package {
 
 	}
 
-
+/*
 
 	public class SortingState implements PackageState {
 
@@ -208,8 +309,7 @@ public class Package {
 
 	}
 
-
-
+	
 	public class TransitState implements PackageState {
 
 	  @Override
@@ -220,8 +320,6 @@ public class Package {
 
 	  }
 
-
-
 	  @Override
 
 	  public void receive(Package pkg) {
@@ -229,7 +327,6 @@ public class Package {
 	    pkg.setState(new ReceivedState());
 
 	  }
-
 
 
 	  @Override
@@ -243,7 +340,6 @@ public class Package {
 	}
 
 
-
 	public class ReceivedState implements PackageState {
 
 	  @Override
@@ -253,7 +349,6 @@ public class Package {
 		  pkg.setState(new TransitState());
 		  
 	  }
-
 
 
 	  @Override
@@ -275,8 +370,7 @@ public class Package {
 	  }
 
 	}
-
+*/
 }
-
 
 
