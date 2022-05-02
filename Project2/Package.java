@@ -24,6 +24,10 @@ public class Package {
 	//Has package arrived?
 	private boolean hasArrived;
 	
+	private List<Map.PostOffice> path;
+	
+	private int packageID;
+	
 	//private boolean isTracking = true;
 	
 	Package(){ //Default constructor, probably don't use in actual execution
@@ -66,6 +70,10 @@ public class Package {
 		
 		hasArrived = false;
 		
+		packageID = (int)(Math.random()*1000000000);
+		
+		System.out.println("Package ID is: "+packageID);
+		
 		Map.computePaths(currLoc);
 		
 		path = Map.getShortestPathTo(Map.getInstance().getStatePostOffice(Rstate));
@@ -98,6 +106,10 @@ public class Package {
 		
 		hasArrived = false;
 		
+		packageID = (int)(Math.random()*1000000000);
+		
+		System.out.println("Package ID is: "+packageID);
+		
 		Map.computePaths(currLoc);
 		
 		path = Map.getShortestPathTo(Map.getInstance().getStatePostOffice(Rstate));
@@ -110,6 +122,10 @@ public class Package {
     			System.out.println(path.get(i).getCityName());
     		}
 		
+	}
+	
+	public int getPackageID() {
+		return packageID;
 	}
 	
 	public void getRcvrInfo() {
