@@ -78,8 +78,7 @@ public class Package {
 		Map.computePaths(currLoc);
 		
 		path = Map.getShortestPathTo(Map.getInstance().getStatePostOffice(Rstate));
-		
-		System.out.println("Path: " + path);
+
     	
 		//Debug Print
     		for(int i = 0; i < path.size(); i++) {
@@ -115,8 +114,6 @@ public class Package {
 		
 		path = Map.getShortestPathTo(Map.getInstance().getStatePostOffice(Rstate));
 		
-		System.out.println("Path: " + path);
-    	
 			
 		//Debug Print
     		for(int i = 0; i < path.size(); i++) {
