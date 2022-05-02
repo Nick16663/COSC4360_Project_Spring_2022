@@ -66,6 +66,17 @@ public class Package {
 		
 		hasArrived = false;
 		
+		Map.computePaths(currLoc);
+		
+		path = Map.getShortestPathTo(Map.getInstance().getStatePostOffice(Rstate));
+		
+		System.out.println("Path: " + path);
+    	
+		//Debug Print
+    		for(int i = 0; i < path.size(); i++) {
+    			System.out.println(path.get(i).getCityName());
+    		}
+		
 	}
 	
 	Package(String Rname, String Raddress, String Rcity, String Rstate, int Rzip, String Sname, String Saddress, String Scity, String Sstate, int Szip, Map.PostOffice currLoc, String currLocName){ //Full constructor
@@ -86,6 +97,18 @@ public class Package {
 		currentLocName = currLocName;
 		
 		hasArrived = false;
+		
+		Map.computePaths(currLoc);
+		
+		path = Map.getShortestPathTo(Map.getInstance().getStatePostOffice(Rstate));
+		
+		System.out.println("Path: " + path);
+    	
+			
+		//Debug Print
+    		for(int i = 0; i < path.size(); i++) {
+    			System.out.println(path.get(i).getCityName());
+    		}
 		
 	}
 	
