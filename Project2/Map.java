@@ -1,6 +1,9 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 //Map class begins ===========================================================================
@@ -11,10 +14,12 @@ public class Map {
 	public static ArrayList<PostOffice> officeList = new ArrayList<PostOffice>(); //gets? sets?
 	public static ArrayList<Edge> roadList = new ArrayList<Edge>();
 	
+	
+	@SuppressWarnings("unused")
 	private static TimeKeeper time;
 	
-	final String POSTOFFICE_PATH = "src\\postoffices.txt";
-	final String ROADS_PATH = "src\\roads.txt";
+	final String POSTOFFICE_PATH = "/Users/nicholaswade/eclipse-workspace/SoftEngFinalProject/src/postoffices.txt";
+	final String ROADS_PATH = "/Users/nicholaswade/eclipse-workspace/SoftEngFinalProject/src/roads.txt";
 	
 	//Map constructor begins ===========================================================================
 	private Map() {
@@ -26,8 +31,14 @@ public class Map {
 			
 			time = new TimeKeeper();
 			
+			
+			
 			input = new Scanner(new File(POSTOFFICE_PATH));
+			
+			
 			input2 = new Scanner(new File(ROADS_PATH));
+			
+			
 			
 			String city;
 			String state;
@@ -52,11 +63,10 @@ public class Map {
 				}else{
 					bool = false;
 				}
-				
 				officeList.add(new PostOffice(city, state, bool)); 
 				
 			}
-			
+
 			input.close();
 			
 			while(input2.hasNextLine()) {
@@ -64,7 +74,7 @@ public class Map {
 				city1 = input2.next();
 				city2 = input2.next();
 				weight = input2.nextInt();
-				
+			
 				
 				
 				for(int i = 0; i < officeList.size(); i++) {
@@ -81,6 +91,8 @@ public class Map {
 				
 				roadList.add(new Edge(cityObj1, cityObj2, weight));
 				roadList.add(new Edge(cityObj2, cityObj1, weight));
+				
+				cityObj1.adjacencies = new Edge[] {new Edge(cityObj2, weight)};
 				
 			}
 			
@@ -125,13 +137,18 @@ public class Map {
 	}
 	
 //PostOffice class begins ===========================================================================
-	static class PostOffice{
+	static class PostOffice implements Comparable<PostOffice>{
 		private String cityName;
 		private String state;
 		private int packagesSent;
 		private int packagesReceived;
 		private boolean available;
 		private boolean hub;
+		public double minDistance = Double.POSITIVE_INFINITY;
+		
+		public PostOffice previous;
+		public Edge[] adjacencies;
+		
 		//private ArrayList<Edge> neighborPaths = new ArrayList<Edge>();
 		
 		PostOffice(){
@@ -277,8 +294,10 @@ public class Map {
 		public String toString() {
 			return "City: "+cityName+", State: "+state+", Packages Sent: "+packagesSent+", Packages Received: "+packagesReceived+", isAvailable: "+available+", isHub: "+hub;
 		}
-		
-		
+
+		public int compareTo(PostOffice other) {
+			return Double.compare(minDistance, other.minDistance);
+		}
 	}//End of PostOffice class  ===========================================================================
 	
 	
@@ -295,6 +314,11 @@ public class Map {
 			this.weight = weight;
 		}
 		
+		public Edge(PostOffice destination, int weight) {
+			this.destination = destination;
+			this.weight = weight;
+		}
+
 		public double getEdgeTime() {
 			return (double)weight / 65;
 		}
@@ -302,7 +326,61 @@ public class Map {
 		public String toString() {
 			return weight+" mile route from "+source.getCityName()+" to "+destination.getCityName();
 		}
-	}// End of Edge class  ===========================================================================
+	}
+	
+	
+	public static void computePaths(PostOffice source)
+    {
+        source.minDistance = 0.;
+        PriorityQueue<PostOffice> PostOfficeQueue = new PriorityQueue<PostOffice>();
+        PostOfficeQueue.add(source);
+
+        while (!PostOfficeQueue.isEmpty()) {
+            PostOffice u = PostOfficeQueue.poll();
+
+            // Visit each edge exiting u
+            for (Edge e : u.getNeighborList())
+            {
+            	PostOffice v = e.destination;
+                double weight = e.weight;
+                double distanceThroughU = u.minDistance + weight;
+                if (distanceThroughU < v.minDistance) {
+                	PostOfficeQueue.remove(v);
+
+                    v.minDistance = distanceThroughU ;
+                    v.previous = u;
+                    PostOfficeQueue.add(v);
+                }
+            }
+        }
+    }
+
+    public static List<PostOffice> getShortestPathTo(PostOffice target)
+    {
+        List<PostOffice> path = new ArrayList<PostOffice>();
+        for (PostOffice vertex = target; vertex != null; vertex = vertex.previous)
+            path.add(vertex);
+
+        Collections.reverse(path);
+        return path;
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// End of Edge class  ===========================================================================
 
 // Commented out for testing purposes
 	/*
