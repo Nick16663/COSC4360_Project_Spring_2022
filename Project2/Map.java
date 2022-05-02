@@ -91,8 +91,7 @@ public class Map {
 				
 				roadList.add(new Edge(cityObj1, cityObj2, weight));
 				roadList.add(new Edge(cityObj2, cityObj1, weight));
-				
-				cityObj1.adjacencies = new Edge[] {new Edge(cityObj2, weight)};
+
 				
 			}
 			
@@ -145,9 +144,7 @@ public class Map {
 		private boolean available;
 		private boolean hub;
 		public double minDistance = Double.POSITIVE_INFINITY;
-		
-		public PostOffice previous;
-		public Edge[] adjacencies;
+		private PostOffice previous;
 		
 		//private ArrayList<Edge> neighborPaths = new ArrayList<Edge>();
 		
@@ -226,7 +223,9 @@ public class Map {
 		public int getPackagesReceived() {
 			return packagesReceived;
 		}
-		
+		public PostOffice getPrevious() {
+			return previous;
+		}
 		public ArrayList<Edge> getNeighborList() {
 			
 			ArrayList<Edge> tempList = new ArrayList<Edge>();
@@ -310,11 +309,6 @@ public class Map {
 
 		public Edge(PostOffice source, PostOffice destination, int weight) {
 			this.source = source;
-			this.destination = destination;
-			this.weight = weight;
-		}
-		
-		public Edge(PostOffice destination, int weight) {
 			this.destination = destination;
 			this.weight = weight;
 		}
