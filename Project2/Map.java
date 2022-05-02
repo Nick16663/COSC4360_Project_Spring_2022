@@ -18,8 +18,8 @@ public class Map {
 	@SuppressWarnings("unused")
 	private static TimeKeeper time;
 	
-	final String POSTOFFICE_PATH = "/Users/nicholaswade/eclipse-workspace/SoftEngFinalProject/src/postoffices.txt";
-	final String ROADS_PATH = "/Users/nicholaswade/eclipse-workspace/SoftEngFinalProject/src/roads.txt";
+	final String POSTOFFICE_PATH = "src\\postoffices.txt";
+	final String ROADS_PATH = "src\\roads.txt";
 	
 	//Map constructor begins ===========================================================================
 	private Map() {
