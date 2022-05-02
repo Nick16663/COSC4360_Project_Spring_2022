@@ -1,4 +1,5 @@
 import java.util.List;
+
 public class Package {
 	
 	final int DayCreated = TimeKeeper.getCurrentDay(); //without testing, I'm assuming this works on initialization
@@ -71,19 +72,22 @@ public class Package {
 		
 		hasArrived = false;
 		
-		packageID = (int)(Math.random()*1000000000);
+		packageID = (int)(100000000 + Math.random()*1000000000);
 		
 		System.out.println("Package ID is: "+packageID);
 		
 		Map.computePaths(currLoc);
 		
 		path = Map.getShortestPathTo(Map.getInstance().getStatePostOffice(Rstate));
-
+		
+		//System.out.println("Path: " + path);
     	
+		/*
 		//Debug Print
     		for(int i = 0; i < path.size(); i++) {
     			System.out.println(path.get(i).getCityName());
     		}
+		*/
 		
 	}
 	
@@ -106,7 +110,7 @@ public class Package {
 		
 		hasArrived = false;
 		
-		packageID = (int)(Math.random()*1000000000);
+		packageID = (int)(100000000 + Math.random()*1000000000);
 		
 		System.out.println("Package ID is: "+packageID);
 		
@@ -114,12 +118,14 @@ public class Package {
 		
 		path = Map.getShortestPathTo(Map.getInstance().getStatePostOffice(Rstate));
 		
-			
+		//System.out.println("Path: " + path);
+    	
+		/*
 		//Debug Print
     		for(int i = 0; i < path.size(); i++) {
     			System.out.println(path.get(i).getCityName());
     		}
-		
+		*/
 	}
 	
 	public int getPackageID() {
@@ -269,18 +275,44 @@ public class Package {
 	}
 	
 	
+	public List<Map.PostOffice> getPathList(){
+		return path;
+	}
+	
+	public boolean finalGoTo(Map.PostOffice x) throws InterruptedException {
+		
+		this.currentLocOffice.addPackagesSent(1);
+		
+		System.out.println("Travelling from "+currentLocOffice.getCityName()+" to "+RcvrAddress+" in "+RcvrCity+", "+RcvrState);
+		
+		setDaysInTransit(0);
+		
+		do {
+			
+			this.addDaysInTransit();
+			
+			System.out.println("Package currently in Transit...");
+			
+			Thread.sleep(1000);
+			
+								
+		}while(this.getDaysInTransit() < (int)(Math.random()*4));
+		
+		System.out.println("Travel time took "+this.getDaysInTransit()+" hours(s)\n");
+		
+		System.out.println("Package arrived in "+RcvrCity);
+		
+		setArrival(true);
+		
+		return true;
+	}
+	
 	public boolean goTo(Map.PostOffice x) throws InterruptedException {
 		if(this.currentLocOffice.getObjNeighbors().contains(x)) {
-			
-			
-			
-			
 			
 			this.currentLocOffice.addPackagesSent(1);
 			
 			System.out.println("Travelling from "+currentLocOffice.getCityName()+" to "+x.getCityName());
-			
-			
 			
 			this.setCurrentLocName("In Transit");
 			setDaysInTransit(0);
@@ -291,17 +323,12 @@ public class Package {
 				
 				System.out.println("Package currently in Transit...");
 				
-				Thread.sleep(2000);
-				
-				//System.out.println("Day "+this.getDaysInTransit()+" of transit: \n Press any key to continue...");
-					
-				
+				Thread.sleep(1000);
+						
 									
-			}while(this.getDaysInTransit()*24 < currentLocOffice.getEdgeTo(x).getEdgeTime() + (int)(Math.random()*25)*Math.random()*6+1);
+			}while(this.getDaysInTransit() < currentLocOffice.getEdgeTo(x).getEdgeTime() + (int)(Math.random()*4));
 			
-			
-			
-			System.out.println("Travel time took "+this.getDaysInTransit()+" day(s)\n");
+			System.out.println("Travel time took "+this.getDaysInTransit()+" hours(s)\n");
 			
 			System.out.println("Package arrived in "+x.getCityName());
 			
@@ -309,10 +336,16 @@ public class Package {
 			this.setCurrLocOffice(x);
 			this.setCurrentLocName(x.getCityName());
 			x.addPackagesReceived(1);
+			
+			
+			if(!getCurrLocOffice().getCityName().equals(RcvrCity) && x.getState().equals(RcvrState)) {
+				finalGoTo(x);
+			}else
+				if(getCurrLocOffice().getCityName().equals(RcvrCity) && x.getState().equals(RcvrState)) {
+					setArrival(true);
+				}	
 			return true;
-			
-			
-			
+		
 		}else {
 			
 			System.out.println("ERR: "+x.getCityName()+" is not a neighbor of "+currentLocOffice.getCityName());
@@ -333,125 +366,61 @@ public class Package {
 	
 	/*
 	private PackageState currentState = new SortingState();
-
-
 	public void setState(PackageState state) {
-
 	this.currentState = state;
-
 	}
-
 	public void getState() {
-
 	this.currentState.showState();
-
 	}
-
-
 	public interface PackageState {
-
 	  void send(Package pkg);
-
 	  void receive(Package pkg);
-
 	  void showState();
-
 	}
-
 /*
-
 	public class SortingState implements PackageState {
-
 	  @Override
-
 	  public void send(Package pkg) {
-
 	    pkg.setState(new TransitState());
-
 	  }
-
-
-
 	  @Override
-
 	  public void receive(Package pkg) {
-
 	    System.out.println("The package has yet to be sent. It's at the initial post office.");
-
 	  }
-
-
-
 	  @Override
-
 	  public void showState() {
-
 	    System.out.println("This package is at the initial post office it was mailed from.");
-
 	  }
-
 	}
-
 	
 	public class TransitState implements PackageState {
-
 	  @Override
-
 	  public void send(Package pkg) {
-
 	    System.out.println("The package has already been set.");
-
 	  }
-
 	  @Override
-
 	  public void receive(Package pkg) {
-
 	    pkg.setState(new ReceivedState());
-
 	  }
-
-
 	  @Override
-
 	  public void showState() {
-
 	    System.out.println("This package is in transit.");
-
 	  }
-
 	}
-
-
 	public class ReceivedState implements PackageState {
-
 	  @Override
-
 	  public void send(Package pkg) {
-
 		  pkg.setState(new TransitState());
 		  
 	  }
-
-
 	  @Override
-
 	  public void receive(Package pkg) {
-
 		  System.out.println("The package is already received at " + PostOffice());
-
 	  }
-
-
-
 	  @Override
-
 	  public void showState() {
-
 	    System.out.println("The package is currently received at " + PostOffice());
-
 	  }
-
 	}
 */
 }

@@ -30,14 +30,10 @@ public class Map {
 		try {
 			
 			time = new TimeKeeper();
-			
-			
-			
+				
 			input = new Scanner(new File(POSTOFFICE_PATH));
-			
-			
+		
 			input2 = new Scanner(new File(ROADS_PATH));
-			
 			
 			
 			String city;
@@ -291,7 +287,7 @@ public class Map {
 		}
 		
 		public String toString() {
-			return "City: "+cityName+", State: "+state+", Packages Sent: "+packagesSent+", Packages Received: "+packagesReceived+", isAvailable: "+available+", isHub: "+hub;
+			return "\nCity: "+cityName+", State: "+state+", Packages Sent: "+packagesSent+", Packages Received: "+packagesReceived+", isAvailable: "+available+", isHub: "+hub ;
 		}
 
 		public int compareTo(PostOffice other) {
@@ -381,7 +377,6 @@ public class Map {
 	static class Graph {
 		int vertices;
 		LinkedList<Edge> [] adjacencylist;
-
 		@SuppressWarnings("unchecked")
 		Graph(int vertices) {
 			this.vertices = vertices;
@@ -391,12 +386,10 @@ public class Map {
 				adjacencylist[i] = new LinkedList<>();
 			}
 		}
-
 		public void addEdge(int source, int destination, int weight) {
 			Edge edge = new Edge(source, destination, weight);
 			adjacencylist[source].addFirst(edge); //for directed graph
 		}
-
 		public void printGraph(){
 			for (int i = 0; i <vertices ; i++) {
 				LinkedList<Edge> list = adjacencylist[i];

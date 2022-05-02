@@ -86,6 +86,7 @@ public class MailTrackingSystem{
     	return true;
     }// End of showMenu =======================================================================
 
+	@SuppressWarnings("static-access")
 	public static boolean displayMenu(Scanner kb) throws InterruptedException {
 	    	
 		final int MAX_CHOICE_NUM = 4;
@@ -115,9 +116,16 @@ public class MailTrackingSystem{
 		case 1: System.out.println("\n\n\n\n====== Employee Login =============================================================================================================="); 
 				programStateRef[0] = 1;
 		    	break;
-		case 2: System.out.println("\n\nSend a Package"); break;
-		case 3: System.out.println("\n\nTrack a Package"); break;
+		case 2: System.out.println("=== Send a Package =============================================================================================================");
+				programStateRef[0] = 2;
+				break;
+		case 3: System.out.println("=== Track a Package =============================================================================================================="); 
+				programStateRef[0] = 3;
+				break;
 		case 4: System.out.println("\n\n=== Exit Program Selected =============================================================================================================="); 
+				
+				System.out.println("Report : "+Map.getInstance().officeList);
+		
 				return false;
 		}
 		    		
@@ -126,11 +134,110 @@ public class MailTrackingSystem{
 	    	return true;
 	}// End of showMenu =======================================================================
 	 
+	public static boolean packageCreate(Scanner kb, ArrayList<Package> packList) {
+		
+		String senderName;
+		String senderAddr;
+		String senderCity;
+		String senderState;
+		int senderZip;
+		
+		String receiverName;
+		String receiverAddr;
+		String receiverCity;
+		String receiverState;
+		int receiverZip;
+		
+		kb.nextLine();
+		
+		System.out.print("\nEnter your name : ");
+		senderName = kb.nextLine();
+		
+		System.out.print("\nEnter your address : ");
+		senderAddr = kb.nextLine();
+		
+		System.out.print("\nEnter your city : ");
+		senderCity = kb.nextLine();
+		
+		System.out.print("\nEnter your state (i.e. TX, AL, NY, etc.): ");
+		senderState = kb.nextLine();
+		
+		System.out.print("\nEnter your zip : ");
+		senderZip = kb.nextInt();
+		
+		kb.nextLine();
+		
+		System.out.print("\nEnter recipient name : ");
+		receiverName = kb.nextLine();
+		
+		System.out.print("\nEnter recipient address : ");
+		receiverAddr = kb.nextLine();
+		
+		System.out.print("\nEnter recipient city : ");
+		receiverCity = kb.nextLine();
+		
+		System.out.print("\nEnter recipient state : ");
+		receiverState = kb.nextLine();
+		
+		System.out.print("\nEnter recipient zip : ");
+		receiverZip = kb.nextInt();
+		
+		System.out.println();
+		
+		packList.add(new Package(receiverName, receiverAddr, receiverCity, receiverState, receiverZip, senderName, senderAddr, senderCity, senderState, senderZip, Map.getInstance().getStatePostOffice(senderState), senderState));
+		
+		programStateRef[0] = 0;
+		
+
+		return true;
+	}
+
+	public static boolean packageMenu(Scanner kb, ArrayList<Package> packList) throws InterruptedException {
+		
+		int packID;
+		int packIndex = 0;
+		boolean validID = false;
+		
+		
+		//ArrayList<Map.PostOffice> tempPathList = new ArrayList<Map.PostOffice>();
+		
+		System.out.print("Enter package ID : ");
+		
+		packID = kb.nextInt();
+		
+		for(int i = 0; i < packList.size(); i++) {
+			if(packList.get(i).getPackageID() == packID) {
+				validID = true;
+				packIndex = i;
+				break;
+			}
+		}
+		
+		if(validID)	{
+			
+			for(int i = 1; i < packList.get(packIndex).getPathList().size(); i++) {
+				packList.get(packIndex).goTo(packList.get(packIndex).getPathList().get(i));
+			}
+		}else {
+			System.out.println("ERR: INVALID ID");
+		}
+		
+		if(packList.get(packIndex).hasArrived()) {
+			//packList.set(packIndex, null); //Destroy arrived package
+		}
+		
+		programStateRef[0] = 0;
+		
+		return true;
+	}
+	
     @SuppressWarnings("static-access")
 	public static void main(String[] args) throws InterruptedException, FileNotFoundException{
     	
+    	ArrayList<Package> packageList = new ArrayList<Package>();
+    	
     	final String EMPLOYEE_PATH = "src\\employeeDatabase.txt";
-		
+    	
 		Scanner kb = new Scanner(System.in);
 		Scanner employeeDatabase = new Scanner(new File(EMPLOYEE_PATH));
 		
@@ -146,6 +253,19 @@ public class MailTrackingSystem{
 			
 		}
 		
+		//TEST CASE
+		
+		String testCurCity1 = "CA";
+    	Map.PostOffice testCurrLoc1 = Map.getInstance().getStatePostOffice(testCurCity1);
+    	
+  
+		
+    	System.out.print("Test Package IDs:" );
+		Package pack1 = new Package("Josh", "123 Mulberry Ln.", "Albany", "NY", 32456, "Ross", "876 Hilldale Way", "San_Francisco", "CA", 12354, testCurrLoc1, testCurCity1);
+		
+		packageList.add(pack1);		
+		
+		//END OF TEST CASE 
 		
     	boolean runProgram = true;
     	final double programVer = 0.01;
@@ -169,11 +289,11 @@ public class MailTrackingSystem{
     		if(programStateRef[0] == 1)
     			runProgram = EmployeeMenu(kb, userNames, passWords);
     		
-    		if(programStateRef[0] == 2) {} //todo: other program states
-    			
+    		if(programStateRef[0] == 2)  //todo: other program states
+    			runProgram = packageCreate(kb, packageList);
     		
-    		if(programStateRef[0] == 3) {} //todo: other program states
-    			
+    		if(programStateRef[0] == 3) //todo: other program states
+    			runProgram = packageMenu(kb, packageList);
     	
     	}while(runProgram);
     	
